@@ -335,7 +335,7 @@ function drawUI() {
   ctx.fillText("High: " + highScore, 10, 40);
   ctx.fillText("Level: " + difficultyLevel, 10, 60);
 
-  ctx.fillStyle = "rgba(0,0,0,0.5)";
+  ctx.fillStyle = "rgba(0,0,0,0.01)";
   ctx.fillRect(740, 5, 55, 30);
   ctx.fillStyle = "white";
   ctx.fillText(muted ? "🔇" : "🔊", 758, 25);
