@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Escape de pie de la cuesta.</title>
+  <link rel="manifest" href="manifest.json">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
   <style>
@@ -38,5 +39,10 @@
   <div class="hint">Toca la pantalla o presiona ESPACIO para saltar</div>
 
   <script src="game.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js");
+    }
+    </script>
 </body>
 </html>
