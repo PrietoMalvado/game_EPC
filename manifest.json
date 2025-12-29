@@ -3,6 +3,7 @@
   "short_name": "EPC",
   "start_url": "index.html",
   "display": "fullscreen",
+  "description": "EPC Game is a game about lupita adn her adventures",
   "background_color": "#000000",
   "theme_color": "#000000",
   "orientation": "landscape",
