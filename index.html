@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Escape de pie de la cuesta.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    canvas {
+      background: #222;
+      max-width: 100vw;
+      max-height: 100vh;
+    }
+
+    .hint {
+      position: absolute;
+      bottom: 10px;
+      color: #aaa;
+      font-family: Arial;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="game" width="800" height="300"></canvas>
+  <div class="hint">Toca la pantalla o presiona ESPACIO para saltar</div>
+
+  <script src="game.js"></script>
+</body>
+</html>
