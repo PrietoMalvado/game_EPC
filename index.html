@@ -42,7 +42,7 @@
   <script>
     console.log(navigator.serviceWorker);
     if ("serviceWorker" in navigator){//si serviceWorker en navigator entonces
-        navigator.serviceWorker.register('/sw.js')//se registra el services worker disenado
+        navigator.serviceWorker.register('./sw.js')//se registra el services worker disenado
             .then ((registration) => {//si se logra la registracion imprimir mensaje de que se efectuo
                 console.log('service worker registered')
             }).catch((error) => {//en caso contrario o error mediante excepcion
