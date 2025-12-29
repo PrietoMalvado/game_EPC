@@ -300,7 +300,7 @@ function drawBackground() {
   ctx.drawImage(bgImage, bgX, 0, BASE_WIDTH, BASE_HEIGHT);
   ctx.drawImage(bgImage, bgX + BASE_WIDTH, 0, BASE_WIDTH, BASE_HEIGHT);
   ctx.fillStyle = "#444";
-  ctx.fillRect(0, 260, BASE_WIDTH, 40);
+  ctx.fillRect(0, 250, BASE_WIDTH, 40);
 }
 
 function drawPlayer() {
