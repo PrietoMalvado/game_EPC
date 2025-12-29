@@ -332,7 +332,7 @@ function drawUI() {
   ctx.fillStyle = "white";
   ctx.font = "16px Arial";
   ctx.fillText("Score: " + Math.floor(score), 10, 20);
-  ctx.fillText("High: " + highScore, 10, 40);
+  ctx.fillText("HighScore: " + highScore, 10, 40);
   ctx.fillText("Level: " + difficultyLevel, 10, 60);
 
   ctx.fillStyle = "rgba(0,0,0,0.01)";
