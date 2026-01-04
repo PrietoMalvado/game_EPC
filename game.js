@@ -63,10 +63,18 @@ enemyImg.src = "img/enemy.png";
 const enemyFlyImg = new Image();
 enemyFlyImg.src = "img/enemy_fly.png";
 
+const coinImg = new Image();
+coinImg.src = "img/garbanzo.png";
+
+const powerUpImg = new Image();
+powerUpImg.src = "img/powerup.png";
+
 /* ===== ESTADO ===== */
 let score = 0;
 let coinsCollected = 0;
 let gameOver = false;
+let invincible = false;
+let invincibleTime = 0;
 
 /* ===== DIFICULTAD ===== */
 let difficultyLevel = 1;
@@ -90,6 +98,7 @@ const player = {
 const obstacles = [];
 const coins = [];
 const flyingEnemies = [];
+const powerUps = [];
 
 /* ===== INPUT ===== */
 document.addEventListener("keydown", e => {
@@ -168,21 +177,28 @@ function updateDifficulty() {
 }
 
 /* ===== SPAWN ===== */
-let obstacleTimer, coinTimer, flyingTimer;
+let obstacleTimer, coinTimer, flyingTimer, powerUpTimer;
 
 function startIntervals() {
+  
   obstacleTimer = setInterval(spawnObstacle, obstacleInterval);
   coinTimer = setInterval(spawnCoin, coinInterval);
 
   if (difficultyLevel >= 3) {
     flyingTimer = setInterval(spawnFlyingEnemy, 2200);
   }
+
+  if (difficultyLevel >= 2) {
+    setInterval(spawnPowerUp, 5000);
+  }
+  
 }
 
 function clearIntervals() {
   clearInterval(obstacleTimer);
   clearInterval(coinTimer);
   clearInterval(flyingTimer);
+  clearInterval(powerUpTimer);
 }
 
 function spawnObstacle() {
@@ -201,7 +217,7 @@ function spawnCoin() {
     coins.push({
       x: BASE_WIDTH + i * 25,
       y: 160 + Math.random() * 60,
-      size: 20
+      size: 30
     });
   }
 }
@@ -213,6 +229,16 @@ function spawnFlyingEnemy() {
     width: 28,
     height: 28
   });
+}
+
+function spawnPowerUp() {
+  if (Math.random() < 0.15) {
+    powerUps.push({
+      x: BASE_WIDTH,
+      y: 140 + Math.random() * 80,
+      size: 30
+    });
+  }
 }
 
 /* ===== UPDATE ===== */
@@ -249,11 +275,11 @@ function collision(a, b) {
 
 function checkCollisions() {
   for (let o of obstacles) {
-    if (collision(player, o)) endGame();
+    if (collision(player, o) && !invincible) endGame();
   }
 
   for (let f of flyingEnemies) {
-    if (collision(player, f)) endGame();
+    if (collision(player, f) && !invincible) endGame();
   }
 
   for (let i = coins.length - 1; i >= 0; i--) {
@@ -267,6 +293,15 @@ function checkCollisions() {
       }
     }
   }
+
+  for (let i = powerUps.length - 1; i >= 0; i--) {
+  if (collision(player, powerUps[i])) {
+    powerUps.splice(i, 1);
+    invincible = true;
+    invincibleTime = 5; // segundos
+  }
+  }
+  
 }
 
 function endGame() {
@@ -291,8 +326,14 @@ function update() {
   updateObjects(obstacles);
   updateObjects(coins, "size");
   updateObjects(flyingEnemies);
+  updateObjects(powerUps, "size");
   checkCollisions();
   score += 0.05;
+
+  if (invincible) {
+    invincibleTime -= 1 / 60;
+    if (invincibleTime <= 0) invincible = false;
+  }
 }
 
 /* ===== DRAW ===== */
@@ -305,6 +346,7 @@ function drawBackground() {
 
 function drawPlayer() {
   ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+  if (invincible && Math.floor(Date.now() / 100) % 2 === 0) return;
 }
 
 function drawObstacles() {
@@ -320,12 +362,53 @@ function drawFlyingEnemies() {
 }
 
 function drawCoins() {
-  ctx.fillStyle = "gold";
   coins.forEach(c => {
-    ctx.beginPath();
-    ctx.arc(c.x, c.y, c.size / 2, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.drawImage(
+      coinImg,
+      c.x - c.size / 4,
+      c.y - c.size / 4,
+      c.size,
+      c.size
+    );
   });
+}
+
+function drawPowerUps() {
+  powerUps.forEach(p =>
+    ctx.drawImage(
+      powerUpImg,
+      p.x - p.size / 2,
+      p.y - p.size / 2,
+      p.size,
+      p.size
+    )
+  );
+}
+
+function drawInvincibleUI() {
+  if (!invincible) return;
+
+  ctx.fillStyle = "rgba(0, 255, 0, 0.85)";
+  ctx.font = "bold 20px Arial";
+  ctx.fillText("INMUNE", 330, 40);
+
+  ctx.fillStyle = "white";
+  ctx.font = "16px Arial";
+  ctx.fillText(
+    invincibleTime.toFixed(1) + " s",
+    360,
+    65
+  );
+
+  // Barra de tiempo (opcional pero pro)
+  const maxWidth = 120;
+  const width = (invincibleTime / 5) * maxWidth;
+
+  ctx.fillStyle = "lime";
+  ctx.fillRect(300, 75, width, 8);
+
+  ctx.strokeStyle = "white";
+  ctx.strokeRect(300, 75, maxWidth, 8);
 }
 
 function drawUI() {
@@ -358,6 +441,8 @@ function loop() {
   drawFlyingEnemies();
   drawCoins();
   drawUI();
+  drawPowerUps();
+  drawInvincibleUI();
   if (!gameOver) requestAnimationFrame(loop);
 }
 
